@@ -1,0 +1,39 @@
+import {Link} from 'react-router-dom'
+import {Component} from 'react'
+
+import TeamItem from '../Teamdata'
+
+class Home extends Component {
+  state = {
+    blogsData: [],
+  }
+
+  componentDidMount() {
+    this.getblogsData()
+  }
+
+  getblogsData = async () => {
+    const response = await fetch('https://apis.ccbp.in/ipl')
+    const data = await response.json()
+    const updatedData = data.map(eachitem => ({
+      name: eachitem.name,
+      id: eachitem.id,
+      imageUrl: eachitem.team_image_url,
+    }))
+    this.setState({blogsData: updatedData})
+  }
+
+  render() {
+    const {blogsData} = this.state
+    return (
+      <div className="teamcard">
+        {blogsData.map(item => (
+          <Link key={blogsData.name} to ="/">
+          <TeamItem blogsData={item} key={item.id} />
+          </Link>
+        ))}
+      </div>
+    )
+  }
+}
+export default Home
